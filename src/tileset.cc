@@ -1,5 +1,6 @@
 #include <tiled-reader/tileset.h>
 
+#include <tiled-reader/exceptions.h>
 #include <libjson.h>
 
 namespace tiled {
@@ -21,8 +22,17 @@ Tileset::Tileset(const JSONNode& json_node) {
 	catch (std::out_of_range) {}
 }
 
-std::unique_ptr<Tileset> Tileset::ReadFromFile(const std::string&, const FileLoader& loader) {
-	return nullptr;
+std::unique_ptr<Tileset> Tileset::ReadFromFile(const std::string& filepath, const FileLoader& loader) {
+	auto json_file = loader.OpenFile(filepath);
+	if (!json_file)
+		throw tiled::BaseException("File not found: %s\n", filepath.c_str());
+
+	auto contents = loader.GetContents(json_file);
+	if (!libjson::is_valid(contents))
+		throw tiled::BaseException("Invalid json: %s\n", filepath.c_str());
+
+	auto json_root = libjson::parse(contents);
+	return std::make_unique<Tileset>(json_root);
 }
 
 } // namespace tiled

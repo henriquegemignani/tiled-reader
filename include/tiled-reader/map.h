@@ -32,6 +32,7 @@ public:
 	int height() const { return height_; }
 	int tile_width() const { return tile_width_; }
 	int tile_height() const { return tile_height_; }
+	const std::string& filepath() const { return filepath_; }
 
 private:
 	int width_;
@@ -40,6 +41,7 @@ private:
 	int tile_height_;
 	Orientation orientation_;
 	RenderOrder render_order_;
+	std::string filepath_;
 	std::vector<Layer> layers_;
 	std::vector<std::tuple<std::unique_ptr<Tileset>, int>> tilesets_;
 	std::unordered_map<std::string, std::string> properties_;

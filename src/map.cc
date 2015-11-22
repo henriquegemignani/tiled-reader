@@ -17,6 +17,7 @@ namespace tiled {
 	}
 
 Map::Map(const std::string& filepath, const JSONNode& json_node, const FileLoader& fileloader)
+	: filepath_(filepath)
 {
 	width_ = json_node["width"].as_int();
 	height_ = json_node["height"].as_int();
@@ -58,7 +59,7 @@ Map::Map(const std::string& filepath, const JSONNode& json_node, const FileLoade
 				tilesets_.emplace_back(std::make_unique<Tileset>(tileset_config), tileset_config["firstgid"].as_int());
 			}
 			else {
-				std::string fullpath = fileloader.GetDirnameOfPath(filepath) + "/" + source_path;
+				std::string fullpath = fileloader.GetDirnameOfPath(filepath_) + "/" + source_path;
 				tilesets_.emplace_back(Tileset::ReadFromFile(fullpath, fileloader),
 					tileset_config["firstgid"].as_int());
 			}	
