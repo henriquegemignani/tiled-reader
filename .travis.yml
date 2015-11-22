@@ -22,5 +22,5 @@ script:
   - cmake .
   - make tiled-reader
   - make tiledreader_test
-  - cd ./test && ./ugdk_test
+  - cd ./test && ./tiledreader_test
 
