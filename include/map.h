@@ -15,21 +15,30 @@ class JSONNode;
 
 namespace tiled {
 
-	class Map {
-	public:
-		Map(const JSONNode& json, const FileLoader&);
-		static std::unique_ptr<Map> ReadFromFile(const std::string&);
-		static std::unique_ptr<Map> ReadFromFile(const std::string&, const FileLoader& loader);
-
-	private:
-		int width_;
-		int height_;
-		int tile_width_;
-		int tile_height_;
-		std::vector<Layer> layers_;
-		std::vector<std::tuple<Tileset, int>> tilesets_;
-		std::unordered_map<std::string, std::string> properties_;
+class Map {
+public:
+	enum class Orientation {
+		ORTHOGONAL
 	};
+	enum class RenderOrder {
+		RIGHT_DOWN
+	};
+
+	Map(const JSONNode& json, const FileLoader&);
+	static std::unique_ptr<Map> ReadFromFile(const std::string&);
+	static std::unique_ptr<Map> ReadFromFile(const std::string&, const FileLoader& loader);
+
+private:
+	int width_;
+	int height_;
+	int tile_width_;
+	int tile_height_;
+	Orientation orientation_;
+	RenderOrder render_order_;
+	std::vector<Layer> layers_;
+	std::vector<std::tuple<Tileset, int>> tilesets_;
+	std::unordered_map<std::string, std::string> properties_;
+};
 
 } // namespace tiled
 

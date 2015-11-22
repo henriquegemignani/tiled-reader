@@ -7,6 +7,15 @@
 
 namespace tiled {
 
+	namespace {
+		std::unordered_map<std::string, Map::Orientation> supported_orientations = {
+			{ "orthogonal", Map::Orientation::ORTHOGONAL },
+		};
+		std::unordered_map<std::string, Map::RenderOrder> supported_render_orders = {
+			{ "right-down", Map::RenderOrder::RIGHT_DOWN },
+		};
+	}
+
 Map::Map(const JSONNode& json_node, const FileLoader& fileloader)
 	//: width_(json_node["width"].)
 {
@@ -14,10 +23,20 @@ Map::Map(const JSONNode& json_node, const FileLoader& fileloader)
 	height_ = json_node["height"].as_int();
 	tile_width_ = json_node["tilewidth"].as_int();
 	tile_height_ = json_node["tileheight"].as_int();
-	if (json_node["orientation"].as_string() != "orthogonal")
-		throw tiled::BaseException("Map orientation not orthogonal.");
-	if (json_node["renderorder"].as_string() != "right-down")
-		throw tiled::BaseException("Map renderorder not right-down.");
+
+	try {
+		orientation_ = supported_orientations.at(json_node["orientation"].as_string());
+	}
+	catch (std::out_of_range) {
+		throw tiled::BaseException("Unsupported map orientation.");
+	}
+
+	try {
+		render_order_ = supported_render_orders.at(json_node["orientation"].as_string());
+	}
+	catch (std::out_of_range) {
+		throw tiled::BaseException("Unsupported map renderorder.");
+	}
 
 	{
 		JSONNode layers_node = json_node["layers"];
