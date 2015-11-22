@@ -1,8 +1,9 @@
 #include "map.h"
 
+#include "exceptions.h"
+
 #include <ugdk/filesystem/module.h>
 #include <ugdk/filesystem/file.h>
-#include <ugdk/system/exceptions.h>
 #include <libjson.h>
 
 namespace tiled {
@@ -15,9 +16,9 @@ Map::Map(const JSONNode& json_node)
 	tile_width_ = json_node["tilewidth"].as_int();
 	tile_height_ = json_node["tileheight"].as_int();
 	if (json_node["orientation"].as_string() != "orthogonal")
-		throw ugdk::system::BaseException("Map orientation not orthogonal.");
+		throw tiled::BaseException("Map orientation not orthogonal.");
 	if (json_node["renderorder"].as_string() != "right-down")
-		throw ugdk::system::BaseException("Map renderorder not right-down.");
+		throw tiled::BaseException("Map renderorder not right-down.");
 
 	{
 		JSONNode layers_node = json_node["layers"];
@@ -39,11 +40,11 @@ Map::Map(const JSONNode& json_node)
 std::unique_ptr<Map> Map::ReadFromFile(const std::string& filepath) {
 	auto json_file = ugdk::filesystem::manager()->OpenFile(filepath);
 	if (!json_file)
-		throw ugdk::system::BaseException("File not found: %s\n", filepath.c_str());
+		throw tiled::BaseException("File not found: %s\n", filepath.c_str());
 
 	auto contents = json_file->GetContents();
 	if (!libjson::is_valid(contents))
-		throw ugdk::system::BaseException("Invalid json: %s\n", filepath.c_str());
+		throw tiled::BaseException("Invalid json: %s\n", filepath.c_str());
 
 	auto json_root = libjson::parse(contents);
 	return std::make_unique<Map>(json_root);
