@@ -41,15 +41,27 @@ Map::Map(const JSONNode& json_node, const FileLoader& fileloader)
 		JSONNode layers_node = json_node["layers"];
 		layers_.reserve(layers_node.size());
 		for (const auto& layer_config : layers_node)
-			layers_.emplace_back(*this, layer_config);
+			layers_.emplace_back(layer_config);
 	}
 
 	{
 		JSONNode tilesets_node = json_node["tilesets"];
 		tilesets_.reserve(tilesets_node.size());
-		for (const auto& tilesets_config : tilesets_node)
-			tilesets_.emplace_back(Tileset::ReadFromFile(tilesets_config["source"].as_string(), fileloader),
-				tilesets_config["firstgid"].as_int());
+		for (const auto& tileset_config : tilesets_node) {
+			std::string source_path;
+			try {
+				source_path = tileset_config.at("source").as_string();
+			}
+			catch (std::out_of_range) {}
+
+			if (source_path.empty()) {
+				tilesets_.emplace_back(std::make_unique<Tileset>(tileset_config), tileset_config["firstgid"].as_int());
+			}
+			else {
+				tilesets_.emplace_back(Tileset::ReadFromFile(source_path, fileloader),
+					tileset_config["firstgid"].as_int());
+			}	
+		}	
 	}
 
 	for (const auto& property_node : json_node["properties"]) {
