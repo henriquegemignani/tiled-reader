@@ -33,7 +33,8 @@ public:
 	std::string GetContents(const std::shared_ptr<File>& file) const override {
 		if (const StdioFile* stdio_file = dynamic_cast<const StdioFile*>(file.get())) {
 			std::string contents;
-			contents.resize(std::fseek(stdio_file->file_, 0, SEEK_END));
+			std::fseek(stdio_file->file_, 0, SEEK_END);
+			contents.resize(std::ftell(stdio_file->file_));
 			std::fseek(stdio_file->file_, 0, SEEK_SET);
 			std::fread(&contents[0], sizeof(char), contents.size(), stdio_file->file_);
 			return contents;

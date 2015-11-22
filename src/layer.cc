@@ -15,9 +15,11 @@ Layer::Layer(const JSONNode& json_node) {
 	for (const auto& index : data_node)
 		data_.emplace_back(index.as_int());
 
-	for (const auto& property_node : json_node["properties"]) {
-		properties_[property_node.name()] = property_node.as_string();
-	}
+	try {
+		for (const auto& property_node : json_node.at("properties")) {
+			properties_[property_node.name()] = property_node.as_string();
+		}
+	} catch(std::out_of_range) {}
 }
 
 int Layer::tile_at(int col, int row) const {

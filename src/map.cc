@@ -31,7 +31,7 @@ Map::Map(const JSONNode& json_node, const FileLoader& fileloader)
 	}
 
 	try {
-		render_order_ = supported_render_orders.at(json_node["orientation"].as_string());
+		render_order_ = supported_render_orders.at(json_node["renderorder"].as_string());
 	}
 	catch (std::out_of_range) {
 		throw tiled::BaseException("Unsupported map renderorder.");
@@ -74,7 +74,7 @@ std::unique_ptr<Map> Map::ReadFromFile(const std::string& filepath) {
 }
 
 std::unique_ptr<Map> Map::ReadFromFile(const std::string& filepath, const FileLoader& loader) {
-	auto json_file = loader.OpenFile(filepath);
+ 	auto json_file = loader.OpenFile(filepath);
 	if (!json_file)
 		throw tiled::BaseException("File not found: %s\n", filepath.c_str());
 
