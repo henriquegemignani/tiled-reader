@@ -35,3 +35,6 @@ src/tileset.cc
 add_library(tiled-reader ${TILEDREADER_SOURCE})
 target_include_directories(tiled-reader PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_link_libraries(tiled-reader PUBLIC libjson)
+
+# Add tests
+add_subdirectory(test)
