@@ -86,4 +86,4 @@ std::unique_ptr<Map> Map::ReadFromFile(const std::string& filepath, const FileLo
 	return std::make_unique<Map>(json_root, loader);
 }
 
-} // namespace shared
+} // namespace tiled

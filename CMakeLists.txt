@@ -29,6 +29,7 @@ include/tiled-reader/object.h
 include/tiled-reader/stdiofileloader.h
 include/tiled-reader/tileset.h
 src/exceptions.cc
+src/fileloader.cc
 src/layer.cc
 src/map.cc
 src/object.cc

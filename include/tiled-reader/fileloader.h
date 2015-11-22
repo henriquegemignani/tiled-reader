@@ -14,6 +14,7 @@ public:
 
 	virtual std::shared_ptr<File> OpenFile(const std::string& path) const = 0;
 	virtual std::string GetContents(const std::shared_ptr<File>& file) const = 0;
+	virtual std::string GetDirnameOfPath(const std::string& path) const;
 };
 
 } // namespace tiled
