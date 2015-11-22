@@ -3,6 +3,7 @@
 
 #include "layer.h"
 #include "tileset.h"
+#include "fileloader.h"
 
 #include <memory>
 #include <string>
@@ -16,8 +17,9 @@ namespace tiled {
 
 	class Map {
 	public:
-		Map(const JSONNode& json);
+		Map(const JSONNode& json, const FileLoader&);
 		static std::unique_ptr<Map> ReadFromFile(const std::string&);
+		static std::unique_ptr<Map> ReadFromFile(const std::string&, const FileLoader& loader);
 
 	private:
 		int width_;

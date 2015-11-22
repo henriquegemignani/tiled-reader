@@ -1,14 +1,13 @@
 #include "map.h"
 
 #include "exceptions.h"
+#include "stdiofileloader.h"
 
-#include <ugdk/filesystem/module.h>
-#include <ugdk/filesystem/file.h>
 #include <libjson.h>
 
 namespace tiled {
 
-Map::Map(const JSONNode& json_node) 
+Map::Map(const JSONNode& json_node, const FileLoader& fileloader)
 	//: width_(json_node["width"].)
 {
 	width_ = json_node["width"].as_int();
@@ -38,16 +37,20 @@ Map::Map(const JSONNode& json_node)
 }
 
 std::unique_ptr<Map> Map::ReadFromFile(const std::string& filepath) {
-	auto json_file = ugdk::filesystem::manager()->OpenFile(filepath);
+	return ReadFromFile(filepath, tiled::StdioFileLoader());
+}
+
+std::unique_ptr<Map> Map::ReadFromFile(const std::string& filepath, const FileLoader& loader) {
+	auto json_file = loader.OpenFile(filepath);
 	if (!json_file)
 		throw tiled::BaseException("File not found: %s\n", filepath.c_str());
 
-	auto contents = json_file->GetContents();
+	auto contents = loader.GetContents(json_file);
 	if (!libjson::is_valid(contents))
 		throw tiled::BaseException("Invalid json: %s\n", filepath.c_str());
 
 	auto json_root = libjson::parse(contents);
-	return std::make_unique<Map>(json_root);
+	return std::make_unique<Map>(json_root, loader);
 }
 
 } // namespace shared

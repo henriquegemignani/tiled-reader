@@ -19,11 +19,13 @@ add_subdirectory(externals/libjson)
 
 # 
 SET(TILEDREADER_SOURCE
+include/exceptions.h
+include/fileloader.h
 include/layer.h
 include/map.h
 include/object.h
+include/stdiofileloader.h
 include/tileset.h
-include/exceptions.h
 src/layer.cc
 src/map.cc
 src/object.cc
