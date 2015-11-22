@@ -34,6 +34,12 @@ public:
 	int tile_height() const { return tile_height_; }
 	const std::string& filepath() const { return filepath_; }
 
+	const std::vector<Layer>& layers() const {
+		return layers_;
+	}
+
+	TileInfo tileinfo_for(const TileIndex& tile) const;
+
 private:
 	int width_;
 	int height_;

@@ -35,4 +35,29 @@ std::unique_ptr<Tileset> Tileset::ReadFromFile(const std::string& filepath, cons
 	return std::make_unique<Tileset>(json_root);
 }
 
+TileInfo Tileset::tileinfo_for(int tile) const
+{
+	int col = tile % columns();
+	int row = tile / rows();
+	TileInfo result;
+	result.asset_name = image_;
+	result.tile_width = tile_width_;
+	result.tile_height = tile_height_;
+	result.p1_u = double(margin_ + col * (tile_width_ + spacing_)) / image_width_;
+	result.p1_v = double(margin_ + row * (tile_height_ + spacing_)) / image_height_;
+	result.p2_u = result.p1_u + double(tile_width_) / image_width_;
+	result.p2_v = result.p1_v + double(tile_height_) / image_height_;
+	return result;
+}
+
+int Tileset::columns() const
+{
+	return (image_width_ - margin_ + spacing_) / (tile_width_ + spacing_);
+}
+
+int Tileset::rows() const
+{
+	return (image_height_ - margin_ + spacing_) / (tile_height_ + spacing_);
+}
+
 } // namespace tiled

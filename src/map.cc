@@ -4,6 +4,7 @@
 #include <tiled-reader/stdiofileloader.h>
 
 #include <libjson.h>
+#include <algorithm>
 
 namespace tiled {
 
@@ -68,6 +69,22 @@ Map::Map(const std::string& filepath, const JSONNode& json_node, const FileLoade
 
 	for (const auto& property_node : json_node["properties"]) {
 		properties_[property_node.name()] = property_node.as_string();
+	}
+}
+
+TileInfo Map::tileinfo_for(const TileIndex& tile) const {
+	using TS_Pair = std::tuple<std::unique_ptr<Tileset>, int>;
+	auto greater = std::upper_bound(tilesets_.begin(), tilesets_.end(),
+		TS_Pair(nullptr, tile.gid),
+		[](const TS_Pair& l, const TS_Pair& r) {
+			return std::get<1>(l) < std::get<1>(r);
+	});
+	if (greater != tilesets_.begin()) {
+		const TS_Pair& target_pair = *std::prev(greater);
+		return std::get<0>(target_pair)->tileinfo_for(tile.gid - std::get<1>(target_pair));
+	}
+	else {
+		throw new BaseException("Unknown tile.");
 	}
 }
 
