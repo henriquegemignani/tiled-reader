@@ -36,7 +36,7 @@ private:
 	Orientation orientation_;
 	RenderOrder render_order_;
 	std::vector<Layer> layers_;
-	std::vector<std::tuple<Tileset, int>> tilesets_;
+	std::vector<std::tuple<std::unique_ptr<Tileset>, int>> tilesets_;
 	std::unordered_map<std::string, std::string> properties_;
 };
 

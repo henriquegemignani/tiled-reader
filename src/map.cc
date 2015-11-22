@@ -17,7 +17,6 @@ namespace tiled {
 	}
 
 Map::Map(const JSONNode& json_node, const FileLoader& fileloader)
-	//: width_(json_node["width"].)
 {
 	width_ = json_node["width"].as_int();
 	height_ = json_node["height"].as_int();
@@ -48,11 +47,14 @@ Map::Map(const JSONNode& json_node, const FileLoader& fileloader)
 	{
 		JSONNode tilesets_node = json_node["tilesets"];
 		tilesets_.reserve(tilesets_node.size());
-		/*for (const auto& tilesets_config : tilesets_node)
-			tilesets_.emplace_back(tilesets_config);*/
+		for (const auto& tilesets_config : tilesets_node)
+			tilesets_.emplace_back(Tileset::ReadFromFile(tilesets_config["source"].as_string(), fileloader),
+				tilesets_config["firstgid"].as_int());
 	}
 
-	//json_node["properties"]
+	for (const auto& property_node : json_node["properties"]) {
+		properties_[property_node.name()] = property_node.as_string();
+	}
 }
 
 std::unique_ptr<Map> Map::ReadFromFile(const std::string& filepath) {
