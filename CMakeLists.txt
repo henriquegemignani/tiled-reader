@@ -26,6 +26,7 @@ include/map.h
 include/object.h
 include/stdiofileloader.h
 include/tileset.h
+src/exceptions.cc
 src/layer.cc
 src/map.cc
 src/object.cc

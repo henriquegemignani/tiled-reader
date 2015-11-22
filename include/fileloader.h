@@ -9,7 +9,7 @@ namespace tiled {
 class FileLoader {
 public:
 	struct File {
-		virtual ~File();
+		virtual ~File() {}
 	};
 
 	virtual std::shared_ptr<File> OpenFile(const std::string& path) const = 0;
