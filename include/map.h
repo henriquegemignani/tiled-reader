@@ -28,6 +28,11 @@ public:
 	static std::unique_ptr<Map> ReadFromFile(const std::string&);
 	static std::unique_ptr<Map> ReadFromFile(const std::string&, const FileLoader& loader);
 
+	int width() const { return width_; }
+	int height() const { return height_; }
+	int tile_width() const { return tile_width_; }
+	int tile_height() const { return tile_height_; }
+
 private:
 	int width_;
 	int height_;
