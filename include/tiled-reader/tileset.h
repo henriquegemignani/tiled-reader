@@ -1,7 +1,7 @@
 #ifndef TILED_TILESET_H_
 #define TILED_TILESET_H_
 
-#include "fileloader.h"
+#include <tiled-reader/fileloader.h>
 #include <string>
 #include <memory>
 #include <unordered_map>

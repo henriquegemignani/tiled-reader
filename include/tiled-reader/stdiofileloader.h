@@ -1,8 +1,8 @@
 #ifndef TILED_STDIOFILELOADER_H_
 #define TILED_STDIOFILELOADER_H_
 
-#include "fileloader.h"
-#include "exceptions.h"
+#include <tiled-reader/fileloader.h>
+#include <tiled-reader/exceptions.h>
 
 #include <memory>
 #include <cstdio>

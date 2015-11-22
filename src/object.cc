@@ -1,4 +1,4 @@
-#include "object.h"
+#include <tiled-reader/object.h>
 
 namespace tiled {
 

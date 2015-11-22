@@ -1,4 +1,4 @@
-#include "tileset.h"
+#include <tiled-reader/tileset.h>
 
 #include <libjson.h>
 

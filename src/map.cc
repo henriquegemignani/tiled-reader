@@ -1,7 +1,7 @@
-#include "map.h"
+#include <tiled-reader/map.h>
 
-#include "exceptions.h"
-#include "stdiofileloader.h"
+#include <tiled-reader/exceptions.h>
+#include <tiled-reader/stdiofileloader.h>
 
 #include <libjson.h>
 

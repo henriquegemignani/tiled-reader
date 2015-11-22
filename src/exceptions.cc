@@ -18,7 +18,7 @@
 * 3. This notice may not be removed or altered from any source distribution.
 **/
 
-#include "exceptions.h"
+#include <tiled-reader/exceptions.h>
 
 #include <iostream>
 #include <cstdarg> // vararg

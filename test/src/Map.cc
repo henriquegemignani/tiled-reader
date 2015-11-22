@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "map.h"
+#include <tiled-reader/map.h>
 
 TEST(Map, ReadFromFile) {
 	auto map = tiled::Map::ReadFromFile("data/sample1.json");

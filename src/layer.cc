@@ -1,4 +1,4 @@
-#include "layer.h"
+#include <tiled-reader/layer.h>
 
 #include <libjson.h>
 

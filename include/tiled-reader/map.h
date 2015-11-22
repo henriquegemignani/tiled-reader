@@ -1,9 +1,9 @@
 #ifndef TILED_MAP_H_
 #define TILED_MAP_H_
 
-#include "layer.h"
-#include "tileset.h"
-#include "fileloader.h"
+#include <tiled-reader/layer.h>
+#include <tiled-reader/tileset.h>
+#include <tiled-reader/fileloader.h>
 
 #include <memory>
 #include <string>
