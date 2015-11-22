@@ -23,10 +23,10 @@ include/layer.h
 include/map.h
 include/object.h
 include/tileset.h
-include/layer.cc
-include/map.cc
-include/object.cc
-include/tileset.cc
+src/layer.cc
+src/map.cc
+src/object.cc
+src/tileset.cc
 )
 
 add_library(tiled-reader ${TILEDREADER_SOURCE})
