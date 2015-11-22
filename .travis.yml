@@ -1,0 +1,23 @@
+language: cpp
+
+compiler:
+  - gcc
+  - clang
+  
+cache: apt
+
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update
+
+install:
+  - sudo apt-get install cmake
+  - sudo apt-get install --force-yes g++-4.7
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.7" CC="gcc-4.7"; fi
+
+script:
+  - cmake .
+  - make tiled-reader
+  - make tiledreader_test
+  - cd ./test && ./ugdk_test
+
