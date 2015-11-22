@@ -15,13 +15,15 @@ class Map;
 
 class Layer {
 public:
-	Layer(const Map& map, const JSONNode& json);
+	Layer(const JSONNode& json);
 	const std::string& name() const { return name_; }
 	int tile_at(int col, int row) const;
 
 private:
 	int width_;
 	int height_;
+	int offset_x_;
+	int offset_y_;
 	std::string name_;
 	std::vector<int> data_;
 	std::vector<void*> objects_;
