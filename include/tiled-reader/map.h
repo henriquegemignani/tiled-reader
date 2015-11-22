@@ -24,7 +24,7 @@ public:
 		RIGHT_DOWN
 	};
 
-	Map(const JSONNode& json, const FileLoader&);
+	Map(const std::string& filepath, const JSONNode& json, const FileLoader&);
 	static std::unique_ptr<Map> ReadFromFile(const std::string&);
 	static std::unique_ptr<Map> ReadFromFile(const std::string&, const FileLoader& loader);
 

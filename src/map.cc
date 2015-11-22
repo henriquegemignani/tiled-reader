@@ -16,7 +16,7 @@ namespace tiled {
 		};
 	}
 
-Map::Map(const JSONNode& json_node, const FileLoader& fileloader)
+Map::Map(const std::string& filepath, const JSONNode& json_node, const FileLoader& fileloader)
 {
 	width_ = json_node["width"].as_int();
 	height_ = json_node["height"].as_int();
@@ -58,7 +58,8 @@ Map::Map(const JSONNode& json_node, const FileLoader& fileloader)
 				tilesets_.emplace_back(std::make_unique<Tileset>(tileset_config), tileset_config["firstgid"].as_int());
 			}
 			else {
-				tilesets_.emplace_back(Tileset::ReadFromFile(source_path, fileloader),
+				std::string fullpath = fileloader.GetDirnameOfPath(filepath) + "/" + source_path;
+				tilesets_.emplace_back(Tileset::ReadFromFile(fullpath, fileloader),
 					tileset_config["firstgid"].as_int());
 			}	
 		}	
@@ -83,7 +84,7 @@ std::unique_ptr<Map> Map::ReadFromFile(const std::string& filepath, const FileLo
 		throw tiled::BaseException("Invalid json: %s\n", filepath.c_str());
 
 	auto json_root = libjson::parse(contents);
-	return std::make_unique<Map>(json_root, loader);
+	return std::make_unique<Map>(filepath, json_root, loader);
 }
 
 } // namespace tiled
