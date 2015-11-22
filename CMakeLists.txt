@@ -15,7 +15,9 @@ endif()
 MESSAGE("== Tiled C++ Reader ==")
 
 # Find libjson
-add_subdirectory(externals/libjson)
+if(NOT TARGET libjson)
+	add_subdirectory(externals/libjson)
+endif()
 
 # 
 SET(TILEDREADER_SOURCE
