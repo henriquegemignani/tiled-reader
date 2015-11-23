@@ -19,7 +19,7 @@ Layer::Layer(const JSONNode& json_node) {
 	auto data_node = json_node["data"];
 	data_.reserve(data_node.size());
 	for (const auto& index : data_node) {
-		data_.emplace_back(index.as_int());
+		data_.emplace_back(static_cast<uint64_t>(index));
 	}
 		
 
@@ -34,13 +34,12 @@ TileIndex Layer::tile_at(int col, int row) const {
 	return data_[row * width_ + col];
 }
 
-TileIndex::TileIndex(uint32_t data)
+TileIndex::TileIndex(uint64_t data)
 	: flipped_horizontally(data & FLIPPED_HORIZONTALLY_FLAG)
 	, flipped_vertically(data & FLIPPED_VERTICALLY_FLAG)
 	, flipped_diagonally(data & FLIPPED_DIAGONALLY_FLAG)
-	, gid(data & ~(FLIPPED_HORIZONTALLY_FLAG |
-		FLIPPED_VERTICALLY_FLAG |
-		FLIPPED_DIAGONALLY_FLAG))
-{}
+	, gid(data & ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG))
+{
+}
 
 } // namespace tiled
