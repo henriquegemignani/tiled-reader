@@ -81,7 +81,7 @@ TileInfo Map::tileinfo_for(const TileIndex& tile) const {
 	});
 	if (greater != tilesets_.begin()) {
 		const TS_Pair& target_pair = *std::prev(greater);
-		return std::get<0>(target_pair)->tileinfo_for(tile.gid - std::get<1>(target_pair));
+		return std::get<0>(target_pair)->tileinfo_for(tile, std::get<1>(target_pair));
 	}
 	else {
 		throw new BaseException("Unknown tile.");

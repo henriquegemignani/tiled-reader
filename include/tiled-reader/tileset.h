@@ -2,6 +2,7 @@
 #define TILED_TILESET_H_
 
 #include <tiled-reader/fileloader.h>
+#include <tiled-reader/layer.h>
 #include <string>
 #include <memory>
 #include <unordered_map>
@@ -22,7 +23,7 @@ public:
 	Tileset(const JSONNode& json);
 	static std::unique_ptr<Tileset> ReadFromFile(const std::string&, const FileLoader& loader);
 
-	TileInfo tileinfo_for(int tile) const;
+	TileInfo tileinfo_for(const TileIndex& tile, int first_gid) const;
 	int columns() const;
 	int rows() const;
 

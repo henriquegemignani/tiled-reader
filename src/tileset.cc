@@ -35,8 +35,9 @@ std::unique_ptr<Tileset> Tileset::ReadFromFile(const std::string& filepath, cons
 	return std::make_unique<Tileset>(json_root);
 }
 
-TileInfo Tileset::tileinfo_for(int tile) const
+TileInfo Tileset::tileinfo_for(const TileIndex& tile_index, int first_gid) const
 {
+	int tile = tile_index.gid - first_gid;
 	int num_cols = columns();
 	int col = tile % num_cols;
 	int row = tile / num_cols;
@@ -48,6 +49,20 @@ TileInfo Tileset::tileinfo_for(int tile) const
 	result.p1_v = double(margin_ + row * (tile_height_ + spacing_)) / image_height_;
 	result.p2_u = result.p1_u + double(tile_width_) / image_width_;
 	result.p2_v = result.p1_v + double(tile_height_) / image_height_;
+
+	if (tile_index.flipped_diagonally) {
+		std::swap(result.p1_u, result.p1_v);
+		std::swap(result.p2_u, result.p2_v);
+	}
+
+	if (tile_index.flipped_horizontally) {
+		std::swap(result.p1_u, result.p2_u);
+	}
+
+	if (tile_index.flipped_vertically) {
+		std::swap(result.p1_v, result.p2_v);
+	}
+
 	return result;
 }
 
