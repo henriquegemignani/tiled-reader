@@ -79,4 +79,8 @@ foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 
 cxx_executable(tiledreader_test src "gtest_main;tiled-reader")
+if (UNIX OR MINGW)
+	tiledreader_add_compile_flag(tiledreader_test -std=c++14)
+endif()
+
 

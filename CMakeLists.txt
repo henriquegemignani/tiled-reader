@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
-cmake_policy(VERSION 3.2.2)
+cmake_policy(VERSION 3.0.0)
 
 PROJECT(tiled-reader CXX C)
 
@@ -19,7 +19,7 @@ if(NOT TARGET libjson)
 	add_subdirectory(externals/libjson)
 endif()
 
-# 
+#
 SET(TILEDREADER_SOURCE
 include/tiled-reader/exceptions.h
 include/tiled-reader/fileloader.h
@@ -40,36 +40,40 @@ add_library(tiled-reader ${TILEDREADER_SOURCE})
 target_include_directories(tiled-reader PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_link_libraries(tiled-reader PUBLIC libjson)
 
+    macro (tiledreader_add_compile_flag target flag)
+        set_property(TARGET ${target} APPEND_STRING PROPERTY COMPILE_FLAGS " ${flag}")
+    endmacro (tiledreader_add_compile_flag)
+
 if (UNIX OR MINGW)
-    target_compile_definitions(tiled-reader PRIVATE -ansi -U_FORTIFY_SOURCE -std=c++14
-        -Wall
-        # TODO: would like these but they produce overwhelming amounts of warnings
-        -Wshadow                       # GLM causes many warnings with this
-        #-Wextra                        # implies -Wunused-parameter
-        -Wmissing-field-initializers
-        #-Wswitch-default               # Currently ignored.
-        -Wconversion                   # GLM causes many warnings with this
-        -Wzero-as-null-pointer-constant
-        -Wtype-limits
-        -Wsign-compare
-        -Wignored-qualifiers
-        -Wuninitialized
-        -Winit-self
+    tiledreader_add_compile_flag(tiled-reader -U_FORTIFY_SOURCE)
+    tiledreader_add_compile_flag(tiled-reader -std=c++14)
+    tiledreader_add_compile_flag(tiled-reader -Wall)
+    tiledreader_add_compile_flag(tiled-reader -Wshadow) # GLM causes many warnings with this)
+    #tiledreader_add_compile_flag(tiled-reader -Wextra) # implies -Wunused-parameter
+    tiledreader_add_compile_flag(tiled-reader -Wmissing-field-initializers)
+    #tiledreader_add_compile_flag(tiled-reader -Wswitch-default) # Currently ignored.
+    tiledreader_add_compile_flag(tiled-reader -Wconversion) # GLM causes many warnings with this
+    tiledreader_add_compile_flag(tiled-reader -Wzero-as-null-pointer-constant)
+    tiledreader_add_compile_flag(tiled-reader -Wtype-limits)
+    tiledreader_add_compile_flag(tiled-reader -Wsign-compare)
+    tiledreader_add_compile_flag(tiled-reader -Wignored-qualifiers)
+    tiledreader_add_compile_flag(tiled-reader -Wuninitialized
+    tiledreader_add_compile_flag(tiled-reader -Winit-self)
     )
 endif()
 
-# Disable some warnings for Clang.
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if (MSVC)
     target_compile_definitions(tiled-reader PRIVATE
-        -Wno-self-assign
-        -Wno-deprecated-register
+        /D_CRT_SECURE_NO_WARNINGS
     )
-endif ()
-
-if (MSVC) 
-    target_compile_definitions(tiled-reader PRIVATE
-        /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4127 /wd4201 /wd4211 /wd4250 /wd4706 /MP
-    )
+    tiledreader_add_compile_flag(tiled-reader /W4)
+    tiledreader_add_compile_flag(tiled-reader /wd4100)
+    tiledreader_add_compile_flag(tiled-reader /wd4127)
+    tiledreader_add_compile_flag(tiled-reader /wd4201)
+    tiledreader_add_compile_flag(tiled-reader /wd4211)
+    tiledreader_add_compile_flag(tiled-reader /wd4250)
+    tiledreader_add_compile_flag(tiled-reader /wd4706)
+    tiledreader_add_compile_flag(tiled-reader /MP)
 endif ()
 
 # Add tests
