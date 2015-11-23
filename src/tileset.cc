@@ -37,8 +37,9 @@ std::unique_ptr<Tileset> Tileset::ReadFromFile(const std::string& filepath, cons
 
 TileInfo Tileset::tileinfo_for(int tile) const
 {
-	int col = tile % columns();
-	int row = tile / rows();
+	int num_cols = columns();
+	int col = tile % num_cols;
+	int row = tile / num_cols;
 	TileInfo result;
 	result.asset_name = image_;
 	result.tile_width = tile_width_;
