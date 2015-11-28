@@ -11,8 +11,10 @@ class JSONNode;
 
 namespace tiled {
 
+class Tileset;
+
 struct TileInfo {
-	std::string asset_name;
+    const Tileset* tileset;
 	int tile_width, tile_height;
 	double p1_u, p1_v;
 	double p2_u, p2_v;
@@ -26,6 +28,7 @@ public:
 	TileInfo tileinfo_for(const TileIndex& tile, int first_gid) const;
 	int columns() const;
 	int rows() const;
+    const std::string& asset_name() const { return image_; }
 
 private:
 	std::string image_;

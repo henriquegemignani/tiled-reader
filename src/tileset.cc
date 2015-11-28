@@ -41,8 +41,9 @@ TileInfo Tileset::tileinfo_for(const TileIndex& tile_index, int first_gid) const
 	int num_cols = columns();
 	int col = tile % num_cols;
 	int row = tile / num_cols;
+
 	TileInfo result;
-	result.asset_name = image_;
+	result.tileset = this;
 	result.tile_width = tile_width_;
 	result.tile_height = tile_height_;
 	result.p1_u = double(margin_ + col * (tile_width_ + spacing_)) / image_width_;
