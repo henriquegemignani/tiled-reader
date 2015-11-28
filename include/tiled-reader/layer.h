@@ -35,6 +35,7 @@ public:
 
 	int width() const { return width_; }
 	int height() const { return height_; }
+    Type type() const { return type_; }
 	TileIndex tile_at(int col, int row) const;
 
 private:
