@@ -25,6 +25,11 @@ struct TileIndex {
 
 class Layer {
 public:
+    enum class Type {
+        TileLayer,
+        ObjectGroup,
+        ImageLayer
+    };
 	Layer(const JSONNode& json);
 	const std::string& name() const { return name_; }
 
@@ -38,6 +43,7 @@ private:
 	int offset_x_;
 	int offset_y_;
 	std::string name_;
+    Layer::Type type_;
 	std::vector<TileIndex> data_;
 	std::vector<void*> objects_;
 	std::unordered_map<std::string, std::string> properties_;
