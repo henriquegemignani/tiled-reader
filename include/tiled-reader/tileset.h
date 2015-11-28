@@ -29,8 +29,10 @@ public:
 	int columns() const;
 	int rows() const;
     const std::string& asset_name() const { return image_; }
+    int id() const { return id_; }
 
 private:
+    int id_;
 	std::string image_;
 	int tile_width_;
 	int tile_height_;
@@ -39,6 +41,7 @@ private:
 	int margin_;
 	int spacing_;
 	std::unordered_map<std::string, std::string> properties_;
+    friend class Map;
 };
 
 } // namespace tiled

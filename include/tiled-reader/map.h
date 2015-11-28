@@ -38,6 +38,13 @@ public:
 		return layers_;
 	}
 
+    const Tileset* tileset(int index) const {
+        return std::get<0>(tilesets_[index]).get();
+    }
+    std::size_t tileset_count() const {
+        return tilesets_.size();
+    }
+
 	TileInfo tileinfo_for(const TileIndex& tile) const;
 
 private:

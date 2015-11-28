@@ -5,7 +5,9 @@
 
 namespace tiled {
 
-Tileset::Tileset(const JSONNode& json_node) {
+Tileset::Tileset(const JSONNode& json_node) 
+    : id_(-1)
+{
 	image_ = json_node["image"].as_string();
 	tile_width_ = json_node["tilewidth"].as_int();
 	tile_height_ = json_node["tileheight"].as_int();
