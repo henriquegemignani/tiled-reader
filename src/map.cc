@@ -85,7 +85,7 @@ TileInfo Map::tileinfo_for(const TileIndex& tile) const {
 			return tileset->tileinfo_for(tile, tileset_firstgid);
 		}
 	}
-    throw new BaseException("Unknown tile.");
+    throw BaseException("Unknown tile.");
 }
 
 std::unique_ptr<Map> Map::ReadFromFile(const std::string& filepath) {
