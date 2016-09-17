@@ -3,6 +3,7 @@
 
 #include <tiled-reader/fileloader.h>
 #include <tiled-reader/layer.h>
+#include <tiled-reader/property.h>
 #include <string>
 #include <memory>
 #include <unordered_map>
@@ -28,7 +29,7 @@ struct TileInfo {
 
 class Tileset {
 public:
-	Tileset(const JSONNode& json);
+	explicit Tileset(const JSONNode& json);
 	static std::unique_ptr<Tileset> ReadFromFile(const std::string&, const FileLoader& loader);
 
 	TileInfo tileinfo_for(const TileIndex& tile, int first_gid) const;
@@ -48,6 +49,7 @@ private:
 	int image_height_;
 	int margin_;
 	int spacing_;
+	std::unordered_map<int, std::unordered_map<std::string, Property>> tile_properties_;
 	std::unordered_map<std::string, std::string> properties_;
 	friend class Map;
 };

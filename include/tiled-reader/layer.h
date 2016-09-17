@@ -30,7 +30,7 @@ public:
         ObjectGroup,
         ImageLayer
     };
-	Layer(const JSONNode& json);
+	explicit Layer(const JSONNode& json);
 	const std::string& name() const { return name_; }
 
 	int width() const { return width_; }

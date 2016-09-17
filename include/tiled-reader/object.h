@@ -7,7 +7,7 @@ namespace tiled {
 
 class Object {
 public:
-	Object(const JSONNode& json);
+	explicit Object(const JSONNode& json);
 };
 
 } // namespace tiled

@@ -12,7 +12,7 @@ namespace tiled {
 class StdioFileLoader : public FileLoader {
 public:
 	struct StdioFile : public File {
-		StdioFile(FILE* file) : file_(file) {}
+		explicit StdioFile(FILE* file) : file_(file) {}
 		~StdioFile() {
 			std::fclose(file_);
 		}
@@ -21,8 +21,7 @@ public:
 	};
 
 	std::shared_ptr<File> OpenFile(const std::string& path) const override {
-		FILE* f = std::fopen(path.c_str(), "rb");
-		if (f) {
+		if (auto f = std::fopen(path.c_str(), "rb")) {
 			return std::make_shared<StdioFile>(f);
 		}
 		else {
@@ -31,7 +30,7 @@ public:
 	}
 
 	std::string GetContents(const std::shared_ptr<File>& file) const override {
-		if (const StdioFile* stdio_file = dynamic_cast<const StdioFile*>(file.get())) {
+		if (auto stdio_file = dynamic_cast<const StdioFile*>(file.get())) {
 			std::string contents;
 			std::fseek(stdio_file->file_, 0, SEEK_END);
 			contents.resize(std::ftell(stdio_file->file_));

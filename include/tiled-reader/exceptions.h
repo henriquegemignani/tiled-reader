@@ -7,7 +7,7 @@ namespace tiled {
 
 class BaseException {
   public:
-    BaseException(const char * fmt, ...); 
+    explicit BaseException(const char * fmt, ...); 
     virtual ~BaseException() throw() {}
 
     inline virtual const char * what() const throw() {
