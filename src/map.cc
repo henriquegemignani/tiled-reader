@@ -62,24 +62,28 @@ Map::Map(const std::string& filepath, const JSONNode& json_node, const FileLoade
 			else {
 				std::string fullpath = fileloader.GetDirnameOfPath(filepath_) + "/" + source_path;
 				tilesets_.emplace_back(Tileset::ReadFromFile(fullpath, fileloader),
-					tileset_config["firstgid"].as_int());
-                std::get<0>(tilesets_.back())->id_ = static_cast<int>(tilesets_.size()) - 1;
+					tileset_config["firstgid"].as_int());                
 			}	
+			std::get<0>(tilesets_.back())->id_ = static_cast<int>(tilesets_.size()) - 1;
 		}	
 	}
 
-	for (const auto& property_node : json_node["properties"]) {
-		properties_[property_node.name()] = property_node.as_string();
+	try {
+		for (const auto& property_node : json_node.at("properties")) {
+			properties_[property_node.name()] = property_node.as_string();
+		}
 	}
+	catch (std::out_of_range) {}
 }
 
 TileInfo Map::tileinfo_for(const TileIndex& tile) const {
-    for (std::size_t id = 0; id < tilesets_.size(); ++id) {
-        if (std::get<1>(tilesets_[id]) > tile.gid) {
-            const auto& target_pair = tilesets_[id - 1];
-            return std::get<0>(target_pair)->tileinfo_for(tile, std::get<1>(target_pair));
-        }
-    }
+	for (const auto& pair : tilesets_) {
+		const auto& tileset = std::get<0>(pair);
+		int tileset_firstgid = std::get<1>(pair);
+		if (tileset_firstgid <= tile.gid && tile.gid < tileset_firstgid + tileset->tile_count()) {
+			return tileset->tileinfo_for(tile, tileset_firstgid);
+		}
+	}
     throw new BaseException("Unknown tile.");
 }
 

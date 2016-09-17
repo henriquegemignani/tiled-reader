@@ -6,6 +6,7 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include <_internal/Source/JSON_Base64.h>
 
 class JSONNode;
 
@@ -28,6 +29,7 @@ public:
 	TileInfo tileinfo_for(const TileIndex& tile, int first_gid) const;
 	int columns() const;
 	int rows() const;
+	int tile_count() const { return tile_count_; }
     const std::string& asset_name() const { return image_; }
     int id() const { return id_; }
 
@@ -36,12 +38,13 @@ private:
 	std::string image_;
 	int tile_width_;
 	int tile_height_;
+	int tile_count_;
 	int image_width_;
 	int image_height_;
 	int margin_;
 	int spacing_;
 	std::unordered_map<std::string, std::string> properties_;
-    friend class Map;
+	friend class Map;
 };
 
 } // namespace tiled

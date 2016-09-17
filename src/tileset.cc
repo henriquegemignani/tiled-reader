@@ -11,6 +11,7 @@ Tileset::Tileset(const JSONNode& json_node)
 	image_ = json_node["image"].as_string();
 	tile_width_ = json_node["tilewidth"].as_int();
 	tile_height_ = json_node["tileheight"].as_int();
+	tile_count_ = json_node["tilecount"].as_int();
 	image_width_ = json_node["imagewidth"].as_int();
 	image_height_ = json_node["imageheight"].as_int();
 	margin_ = json_node["margin"].as_int();
