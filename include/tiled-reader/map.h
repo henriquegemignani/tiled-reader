@@ -46,6 +46,7 @@ public:
     }
 
 	TileInfo tileinfo_for(const TileIndex& tile) const;
+	std::tuple<const Tileset*, int> tileset_for(const TileIndex& tile) const;
 
 private:
 	int width_;

@@ -72,15 +72,20 @@ Map::Map(const std::string& filepath, const JSONNode& json_node, const FileLoade
 }
 
 TileInfo Map::tileinfo_for(const TileIndex& tile) const {
+	auto pair = tileset_for(tile);
+	return std::get<0>(pair)->tileinfo_for(tile, std::get<1>(pair));
+}
+
+std::tuple<const Tileset*, int> Map::tileset_for(const TileIndex& tile) const {
 	int gid = static_cast<int>(tile.gid);
 	for (const auto& pair : tilesets_) {
 		const auto& tileset = std::get<0>(pair);
 		int tileset_firstgid = std::get<1>(pair);
 		if (tileset_firstgid <= gid && gid < tileset_firstgid + tileset->tile_count()) {
-			return tileset->tileinfo_for(tile, tileset_firstgid);
+			return std::make_tuple(tileset.get(), tileset_firstgid);
 		}
 	}
-    throw BaseException("Unknown tile.");
+	throw BaseException("Unknown tile.");
 }
 
 std::unique_ptr<Map> Map::ReadFromFile(const std::string& filepath) {

@@ -37,6 +37,9 @@ public:
 	int height() const { return height_; }
     Type type() const { return type_; }
 	TileIndex tile_at(int col, int row) const;
+	bool IsInside(int col, int row) const {
+		return 0 <= col && col < width_ && 0 <= row && row < height_;
+	}
 
 private:
 	int width_;
