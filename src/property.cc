@@ -27,7 +27,7 @@ Property::Property(const JSONNode& value, const JSONNode& type) {
 	switch (type_)
 	{
 	case Type::STRING:
-		value_.string_ = value.as_string();
+		value_.string_ = new std::string(value.as_string());
 		break;
 	case Type::INT:
 		value_.int_ = value.as_int();
@@ -39,6 +39,11 @@ Property::Property(const JSONNode& value, const JSONNode& type) {
 		value_.float_ = value.as_float();
 		break;
 	}
+}
+
+Property::~Property() {
+	if (type_ == Type::STRING)
+		delete value_.string_;
 }
 
 int Property::int_value() const {
@@ -58,7 +63,7 @@ float Property::float_value() const {
 
 const std::string& Property::string_value() const {
 	assert(type_ == Property::Type::STRING);
-	return value_.string_;
+	return *value_.string_;
 }
 
 } // namespace tiled

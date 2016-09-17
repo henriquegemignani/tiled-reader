@@ -1,12 +1,8 @@
 #ifndef TILED_PROPERTY_H_
 #define TILED_PROPERTY_H_
 
-#include <memory>
 #include <string>
-#include <vector>
-#include <tuple>
 #include <unordered_map>
-#include <cstdint>
 
 class JSONNode;
 
@@ -21,6 +17,7 @@ public:
 		FLOAT
 	};
 	Property(const JSONNode& value, const JSONNode& type);
+	~Property();
 
 	int int_value() const;
 	bool bool_value() const;
@@ -33,12 +30,14 @@ private:
 		int int_;
 		bool bool_;
 		float float_;
-		std::string string_;
+		std::string* string_;
 	};
 
-	Property::Type type_;
+	Type type_;
 	Value value_;
 };
+
+using PropertyMap = std::unordered_map<std::string, Property>;
 
 } // namespace tiled
 

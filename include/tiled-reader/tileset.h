@@ -17,8 +17,8 @@ namespace tiled {
 class Tileset;
 
 struct UV {
-	double u;
-	double v;
+	float u;
+	float v;
 };
 
 struct TileInfo {
@@ -49,8 +49,7 @@ private:
 	int image_height_;
 	int margin_;
 	int spacing_;
-	std::unordered_map<int, std::unordered_map<std::string, Property>> tile_properties_;
-	std::unordered_map<std::string, std::string> properties_;
+	std::unordered_map<int, PropertyMap> tile_properties_;
 	friend class Map;
 };
 

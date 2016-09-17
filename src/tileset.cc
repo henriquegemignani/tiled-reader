@@ -17,10 +17,27 @@ Tileset::Tileset(const JSONNode& json_node)
 	margin_ = json_node["margin"].as_int();
 	spacing_ = json_node["spacing"].as_int();
 
-	try {
-		for (const auto& property_node : json_node.at("properties")) {
-			properties_[property_node.name()] = property_node.as_string();
+	auto tiles_properties = json_node.find("tileproperties");
+	auto tiles_properties_types = json_node.find("tilepropertytypes");
+	if (tiles_properties != json_node.end()) {
+		if (tiles_properties_types == json_node.end()) {
+			throw tiled::BaseException("Tileset has tileproperties but not tilepropertytypes.");
 		}
+		for (const auto& tile_properties : *tiles_properties) {
+			const auto& properties_types = tiles_properties_types->at(tile_properties.name());
+			int tile_index = std::stoi(tile_properties.name());
+			
+			auto& properties = tile_properties_[tile_index];
+			for(const auto& property_value : tile_properties) {
+				properties.emplace(std::piecewise_construct, // ("foo": Property)
+					std::make_tuple(property_value.name()),
+					std::make_tuple(property_value, properties_types[property_value.name()]));
+			}
+		}
+	}
+
+	try {
+		
 	}
 	catch (std::out_of_range) {}
 }
@@ -45,10 +62,10 @@ TileInfo Tileset::tileinfo_for(const TileIndex& tile_index, int first_gid) const
 	int col = tile % num_cols;
 	int row = tile / num_cols;
 	
-	double left_u = double(margin_ + col * (tile_width_ + spacing_)) / image_width_;
-	double top_v = double(margin_ + row * (tile_height_ + spacing_)) / image_height_;
-	double right_u = left_u + double(tile_width_) / image_width_;
-	double bot_v = top_v + double(tile_height_) / image_height_;
+	float left_u = float(margin_ + col * (tile_width_ + spacing_)) / image_width_;
+	float top_v = float(margin_ + row * (tile_height_ + spacing_)) / image_height_;
+	float right_u = left_u + float(tile_width_) / image_width_;
+	float bot_v = top_v + float(tile_height_) / image_height_;
 
 	if (tile_index.flipped_horizontally) {
 		std::swap(left_u, right_u);
