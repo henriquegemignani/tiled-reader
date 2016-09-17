@@ -35,11 +35,6 @@ Tileset::Tileset(const JSONNode& json_node)
 			}
 		}
 	}
-
-	try {
-		
-	}
-	catch (std::out_of_range) {}
 }
 
 std::unique_ptr<Tileset> Tileset::ReadFromFile(const std::string& filepath, const FileLoader& loader) {
@@ -102,4 +97,13 @@ int Tileset::rows() const
 	return (image_height_ - margin_ + spacing_) / (tile_height_ + spacing_);
 }
 
+const PropertyMap* Tileset::tileproperties_for(const TileIndex& tile_index, int first_gid) const {
+	int tile = tile_index.gid - first_gid;
+	const auto& iterator = tile_properties_.find(tile);
+	if (iterator == tile_properties_.end()) {
+		return nullptr;
+	} else {
+		return &iterator->second;
+	}
+}
 } // namespace tiled

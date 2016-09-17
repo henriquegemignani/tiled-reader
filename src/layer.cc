@@ -27,27 +27,19 @@ Layer::Layer(const JSONNode& json_node) {
 
     
     try {
-            type_ = supported_types.at(json_node["type"].as_string());
+		type_ = supported_types.at(json_node["type"].as_string());
     }
     catch (std::out_of_range) {
         throw tiled::BaseException("Unsupported map orientation.");
     }
 
-    try {
-        auto data_node = json_node.at("data");
-        data_.reserve(data_node.size());
-        for (const auto& index : data_node) {
-            data_.emplace_back(static_cast<uint64_t>(index));
-        }
-    }
-    catch (std::out_of_range) {}
-		
-
-	try {
-		for (const auto& property_node : json_node.at("properties")) {
-			properties_[property_node.name()] = property_node.as_string();
+	auto data_node = json_node.find("data");
+	if (data_node != json_node.end()) {
+		data_.reserve(data_node->size());
+		for (const auto& index : *data_node) {
+			data_.emplace_back(static_cast<uint64_t>(index));
 		}
-	} catch(std::out_of_range) {}
+	}
 }
 
 TileIndex Layer::tile_at(int col, int row) const {

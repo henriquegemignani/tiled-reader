@@ -88,6 +88,18 @@ std::tuple<const Tileset*, int> Map::tileset_for(const TileIndex& tile) const {
 	throw BaseException("Unknown tile.");
 }
 
+const PropertyMap& Map::tileproperties_for(const TileIndex& tile) const {
+	static PropertyMap no_properties;
+
+	auto pair = tileset_for(tile);
+	auto map = std::get<0>(pair)->tileproperties_for(tile, std::get<1>(pair));
+	if (map) {
+		return *map;
+	} else {
+		return no_properties;
+	}
+}
+
 std::unique_ptr<Map> Map::ReadFromFile(const std::string& filepath) {
 	return ReadFromFile(filepath, tiled::StdioFileLoader());
 }

@@ -38,6 +38,7 @@ public:
 	int tile_count() const { return tile_count_; }
     const std::string& asset_name() const { return image_; }
     int id() const { return id_; }
+	const PropertyMap* tileproperties_for(const TileIndex& tile, int first_gid) const;
 
 private:
     int id_;
