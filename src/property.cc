@@ -8,7 +8,7 @@ namespace tiled {
 
 namespace {
 	namespace {
-		std::unordered_map<std::string, Property::Type> supported_types = {
+		std::unordered_map<json_string, Property::Type> supported_types = {
 			{ "bool", Property::Type::BOOL },
 			{ "string", Property::Type::STRING },
 			{ "int", Property::Type::INT },
@@ -27,7 +27,7 @@ Property::Property(const JSONNode& value, const JSONNode& type) {
 	switch (type_)
 	{
 	case Type::STRING:
-		value_.string_ = new std::string(value.as_string());
+		value_.string_ = new std::string(value.as_string().c_str());
 		break;
 	case Type::INT:
 		value_.int_ = value.as_int();

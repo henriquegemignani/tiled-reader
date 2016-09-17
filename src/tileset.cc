@@ -7,8 +7,8 @@ namespace tiled {
 
 Tileset::Tileset(const JSONNode& json_node) 
     : id_(-1)
+	, image_(json_node["image"].as_string().c_str())
 {
-	image_ = json_node["image"].as_string();
 	tile_width_ = json_node["tilewidth"].as_int();
 	tile_height_ = json_node["tileheight"].as_int();
 	tile_count_ = json_node["tilecount"].as_int();
@@ -25,12 +25,12 @@ Tileset::Tileset(const JSONNode& json_node)
 		}
 		for (const auto& tile_properties : *tiles_properties) {
 			const auto& properties_types = tiles_properties_types->at(tile_properties.name());
-			int tile_index = std::stoi(tile_properties.name());
+			int tile_index = std::stoi(tile_properties.name().c_str());
 			
 			auto& properties = tile_properties_[tile_index];
 			for(const auto& property_value : tile_properties) {
 				properties.emplace(std::piecewise_construct, // ("foo": Property)
-					std::make_tuple(property_value.name()),
+					std::make_tuple(property_value.name().c_str()),
 					std::make_tuple(property_value, properties_types[property_value.name()]));
 			}
 		}
@@ -42,7 +42,7 @@ std::unique_ptr<Tileset> Tileset::ReadFromFile(const std::string& filepath, cons
 	if (!json_file)
 		throw tiled::BaseException("File not found: %s\n", filepath.c_str());
 
-	auto contents = loader.GetContents(json_file);
+	auto contents = json_string(loader.GetContents(json_file).c_str());
 	if (!libjson::is_valid(contents))
 		throw tiled::BaseException("Invalid json: %s\n", filepath.c_str());
 

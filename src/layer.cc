@@ -27,7 +27,7 @@ Layer::Layer(const JSONNode& json_node) {
 
     
     try {
-		type_ = supported_types.at(json_node["type"].as_string());
+		type_ = supported_types.at(json_node["type"].as_string().c_str());
     }
     catch (std::out_of_range) {
         throw tiled::BaseException("Unsupported map orientation.");

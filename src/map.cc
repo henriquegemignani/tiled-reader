@@ -9,10 +9,10 @@
 namespace tiled {
 
 	namespace {
-		std::unordered_map<std::string, Map::Orientation> supported_orientations = {
+		std::unordered_map<json_string, Map::Orientation> supported_orientations = {
 			{ "orthogonal", Map::Orientation::ORTHOGONAL },
 		};
-		std::unordered_map<std::string, Map::RenderOrder> supported_render_orders = {
+		std::unordered_map<json_string, Map::RenderOrder> supported_render_orders = {
 			{ "right-down", Map::RenderOrder::RIGHT_DOWN },
 		};
 	}
@@ -55,19 +55,12 @@ Map::Map(const std::string& filepath, const JSONNode& json_node, const FileLoade
 				tilesets_.emplace_back(std::make_unique<Tileset>(tileset_config), tileset_config["firstgid"].as_int());
 			}
 			else {
-				auto fullpath = fileloader.GetDirnameOfPath(filepath_) + "/" + source->as_string();
+				auto fullpath = fileloader.GetDirnameOfPath(filepath_) + "/" + source->as_string().c_str();
 				tilesets_.emplace_back(Tileset::ReadFromFile(fullpath, fileloader),
 					tileset_config["firstgid"].as_int());                
 			}	
 			std::get<0>(tilesets_.back())->id_ = static_cast<int>(tilesets_.size()) - 1;
 		}	
-	}
-
-	auto properties = json_node.find("properties");
-	if (properties != json_node.end()) {
-		for (const auto& property_node : *properties) {
-			properties_[property_node.name()] = property_node.as_string();
-		}
 	}
 }
 
@@ -91,6 +84,9 @@ std::tuple<const Tileset*, int> Map::tileset_for(const TileIndex& tile) const {
 const PropertyMap& Map::tileproperties_for(const TileIndex& tile) const {
 	static PropertyMap no_properties;
 
+	if (tile.gid == 0)
+		return no_properties;
+
 	auto pair = tileset_for(tile);
 	auto map = std::get<0>(pair)->tileproperties_for(tile, std::get<1>(pair));
 	if (map) {
@@ -109,7 +105,7 @@ std::unique_ptr<Map> Map::ReadFromFile(const std::string& filepath, const FileLo
 	if (!json_file)
 		throw tiled::BaseException("File not found: %s\n", filepath.c_str());
 
-	auto contents = loader.GetContents(json_file);
+	auto contents = json_string(loader.GetContents(json_file).c_str());
 	if (!libjson::is_valid(contents))
 		throw tiled::BaseException("Invalid json: %s\n", filepath.c_str());
 
