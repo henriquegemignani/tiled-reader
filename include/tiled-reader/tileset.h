@@ -6,6 +6,7 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include <tuple>
 #include <_internal/Source/JSON_Base64.h>
 
 class JSONNode;
@@ -14,11 +15,15 @@ namespace tiled {
 
 class Tileset;
 
+struct UV {
+	double u;
+	double v;
+};
+
 struct TileInfo {
     const Tileset* tileset;
 	int tile_width, tile_height;
-	double p1_u, p1_v;
-	double p2_u, p2_v;
+	UV top_left, top_right, bot_left, bot_right;
 };
 
 class Tileset {

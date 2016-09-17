@@ -44,27 +44,32 @@ TileInfo Tileset::tileinfo_for(const TileIndex& tile_index, int first_gid) const
 	int num_cols = columns();
 	int col = tile % num_cols;
 	int row = tile / num_cols;
-
-	TileInfo result;
-	result.tileset = this;
-	result.tile_width = tile_width_;
-	result.tile_height = tile_height_;
-	result.p1_u = double(margin_ + col * (tile_width_ + spacing_)) / image_width_;
-	result.p1_v = double(margin_ + row * (tile_height_ + spacing_)) / image_height_;
-	result.p2_u = result.p1_u + double(tile_width_) / image_width_;
-	result.p2_v = result.p1_v + double(tile_height_) / image_height_;
-
-	if (tile_index.flipped_diagonally) {
-		std::swap(result.p1_u, result.p1_v);
-		std::swap(result.p2_u, result.p2_v);
-	}
+	
+	double left_u = double(margin_ + col * (tile_width_ + spacing_)) / image_width_;
+	double top_v = double(margin_ + row * (tile_height_ + spacing_)) / image_height_;
+	double right_u = left_u + double(tile_width_) / image_width_;
+	double bot_v = top_v + double(tile_height_) / image_height_;
 
 	if (tile_index.flipped_horizontally) {
-		std::swap(result.p1_u, result.p2_u);
+		std::swap(left_u, right_u);
 	}
 
 	if (tile_index.flipped_vertically) {
-		std::swap(result.p1_v, result.p2_v);
+		std::swap(top_v, bot_v);
+	}
+
+	TileInfo result = {
+		this,
+		tile_width_,
+		tile_height_,
+		{ left_u, top_v },
+		{ right_u, top_v },
+		{ left_u, bot_v },
+		{ right_u, bot_v },
+	};
+
+	if (tile_index.flipped_diagonally) {
+		std::swap(result.top_left, result.bot_right);
 	}
 
 	return result;
