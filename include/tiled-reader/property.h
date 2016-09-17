@@ -25,11 +25,19 @@ public:
 	int int_value() const;
 	bool bool_value() const;
 	float float_value() const;
-	std::string string_value() const;
+	const std::string& string_value() const;
 
 
 private:
+	union Value {
+		int int_;
+		bool bool_;
+		float float_;
+		std::string string_;
+	};
+
 	Property::Type type_;
+	Value value_;
 };
 
 } // namespace tiled
