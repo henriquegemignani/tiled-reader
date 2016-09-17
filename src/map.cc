@@ -50,17 +50,12 @@ Map::Map(const std::string& filepath, const JSONNode& json_node, const FileLoade
 		const auto& tilesets_node = json_node["tilesets"];
 		tilesets_.reserve(tilesets_node.size());
 		for (const auto& tileset_config : tilesets_node) {
-			std::string source_path;
-			try {
-				source_path = tileset_config.at("source").as_string();
-			}
-			catch (std::out_of_range) {}
-
-			if (source_path.empty()) {
+			auto source = tileset_config.find("source");
+			if (source == tileset_config.end()) {
 				tilesets_.emplace_back(std::make_unique<Tileset>(tileset_config), tileset_config["firstgid"].as_int());
 			}
 			else {
-				std::string fullpath = fileloader.GetDirnameOfPath(filepath_) + "/" + source_path;
+				auto fullpath = fileloader.GetDirnameOfPath(filepath_) + "/" + source->as_string();
 				tilesets_.emplace_back(Tileset::ReadFromFile(fullpath, fileloader),
 					tileset_config["firstgid"].as_int());                
 			}	
@@ -68,12 +63,12 @@ Map::Map(const std::string& filepath, const JSONNode& json_node, const FileLoade
 		}	
 	}
 
-	try {
-		for (const auto& property_node : json_node.at("properties")) {
+	auto properties = json_node.find("properties");
+	if (properties != json_node.end()) {
+		for (const auto& property_node : *properties) {
 			properties_[property_node.name()] = property_node.as_string();
 		}
 	}
-	catch (std::out_of_range) {}
 }
 
 TileInfo Map::tileinfo_for(const TileIndex& tile) const {
