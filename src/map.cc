@@ -40,14 +40,14 @@ Map::Map(const std::string& filepath, const JSONNode& json_node, const FileLoade
 	}
 
 	{
-		JSONNode layers_node = json_node["layers"];
+		const auto& layers_node = json_node["layers"];
 		layers_.reserve(layers_node.size());
 		for (const auto& layer_config : layers_node)
 			layers_.emplace_back(layer_config);
 	}
 
 	{
-		JSONNode tilesets_node = json_node["tilesets"];
+		const auto& tilesets_node = json_node["tilesets"];
 		tilesets_.reserve(tilesets_node.size());
 		for (const auto& tileset_config : tilesets_node) {
 			std::string source_path;
@@ -77,10 +77,11 @@ Map::Map(const std::string& filepath, const JSONNode& json_node, const FileLoade
 }
 
 TileInfo Map::tileinfo_for(const TileIndex& tile) const {
+	int gid = static_cast<int>(tile.gid);
 	for (const auto& pair : tilesets_) {
 		const auto& tileset = std::get<0>(pair);
 		int tileset_firstgid = std::get<1>(pair);
-		if (tileset_firstgid <= tile.gid && tile.gid < tileset_firstgid + tileset->tile_count()) {
+		if (tileset_firstgid <= gid && gid < tileset_firstgid + tileset->tile_count()) {
 			return tileset->tileinfo_for(tile, tileset_firstgid);
 		}
 	}
