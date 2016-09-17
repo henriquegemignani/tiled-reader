@@ -26,6 +26,7 @@ include/tiled-reader/fileloader.h
 include/tiled-reader/layer.h
 include/tiled-reader/map.h
 include/tiled-reader/object.h
+include/tiled-reader/property.h
 include/tiled-reader/stdiofileloader.h
 include/tiled-reader/tileset.h
 src/exceptions.cc
@@ -33,6 +34,7 @@ src/fileloader.cc
 src/layer.cc
 src/map.cc
 src/object.cc
+src/property.cc
 src/tileset.cc
 )
 
@@ -64,7 +66,7 @@ endif()
 
 if (MSVC)
     target_compile_definitions(tiled-reader PRIVATE
-        /D_CRT_SECURE_NO_WARNINGS
+        _CRT_SECURE_NO_WARNINGS
     )
     tiledreader_add_compile_flag(tiled-reader /W4)
     tiledreader_add_compile_flag(tiled-reader /wd4100)
