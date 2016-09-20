@@ -2,6 +2,8 @@
 
 #include <tiled-reader/exceptions.h>
 #include <libjson.h>
+#include <zlib.h>
+#include <memory>
 
 
 namespace tiled {
@@ -18,14 +20,6 @@ namespace {
             { "imagelayer", Layer::Type::ImageLayer },
         };
     }
-
-	std::string decompress(const std::string& compressed_data) {
-		throw tiled::BaseException("compression is NYI");
-    }
-
-	std::string identity(const std::string& compressed_data) {
-		return compressed_data;
-	}
 }
 
 Layer::Layer(const JSONNode& json_node) {
@@ -48,17 +42,35 @@ Layer::Layer(const JSONNode& json_node) {
 		is_base64 = encoding->as_string().compare("base64") == 0;
 
 	auto is_compressed = false;
-	auto decompression_function = is_compressed ? decompress : identity;
+	auto compression = json_node.find("compression");
+	if (compression != json_node.end())
+		is_compressed = compression->as_string().compare("zlib") == 0;
 
 	auto data_node = json_node.find("data");
 	if (data_node != json_node.end()) {
 		auto num_tiles = width_ * height_;
 		data_.reserve(num_tiles);
 		if (is_base64) {
-			auto binary_data_as_string = decompression_function(data_node->as_binary());
-			auto binary_data = reinterpret_cast<const uint8_t*>(binary_data_as_string.data());
+			auto num_bytes = num_tiles * 4;
+			auto data_node_binary = data_node->as_binary();
+			const uint8_t* binary_data;
+			std::unique_ptr<uint8_t> uncompressed_data;
 
-			for (std::size_t tile_index = 0; tile_index < binary_data_as_string.size(); tile_index += 4) {
+			if (is_compressed) {
+				//out = (unsigned *)malloc(outlen);
+				unsigned long final_unzip_bytes;
+				uncompressed_data.reset(new uint8_t[num_bytes]);
+				uncompress(
+					uncompressed_data.get(), &final_unzip_bytes,
+					reinterpret_cast<const uint8_t*>(data_node_binary.c_str()),
+					data_node_binary.size());
+				binary_data = uncompressed_data.get();
+
+			} else {
+				binary_data = reinterpret_cast<const uint8_t*>(data_node_binary.data());
+			}
+
+			for (std::size_t tile_index = 0; tile_index < num_bytes; tile_index += 4) {
 				uint32_t id = binary_data[tile_index] |
 							  binary_data[tile_index + 1] << 8 |
 							  binary_data[tile_index + 2] << 16 |
