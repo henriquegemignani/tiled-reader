@@ -15,7 +15,7 @@ namespace tiled {
 class Map;
 
 struct TileIndex {
-	TileIndex(uint64_t data);
+	TileIndex(uint32_t data);
 
 	uint32_t gid:29;
 	bool flipped_horizontally:1;
